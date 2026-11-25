@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>直播源订阅整理 · 仅供测试</title>
+<meta name="description" content="个人整理的 IPTV / 直播源 M3U 订阅地址导航，仅供测试使用，所有源均来自网络公开整理项目。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📺</text></svg>">
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="badge">⚠️ 仅供测试 · 严禁用于商业用途</div>
+    <h1>直播源订阅整理</h1>
+    <p class="sub">收集自网络的公开 M3U / M3U8 直播订阅，按地区与类型归档，一键复制订阅地址或站内试播。</p>
+    <div class="stats" id="stats">
+      <div class="stat"><b id="stLists">-</b><span>订阅列表</span></div>
+      <div class="stat"><b id="stChannels">-</b><span>频道条目</span></div>
+      <div class="stat"><b id="stRepos">-</b><span>来源仓库</span></div>
+      <div class="stat"><b>2</b><span>EPG 节目单</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="notice">
+    <strong>免责声明</strong>
+    <p>本站<strong>仅供测试</strong>。所有直播源<strong>均来自于网络</strong>上的公开整理项目，本人<strong>只进行收集和整理</strong>，<strong>不对内容的隐私和版权负责</strong>。本站不存储、不转码、不转发任何视频流，播放直连源站；源站的可用性、合法性、时效性由其维护者与使用者自行承担。如有侵权，请联系源站或删除对应条目。</p>
+  </section>
+
+  <section class="toolbar">
+    <div class="search-box">
+      <span class="ico">🔍</span>
+      <input id="q" type="search" placeholder="搜索订阅名、地区、仓库或频道关键字…" autocomplete="off">
+      <button id="clearQ" class="clear" title="清空">×</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="count" id="count"></div>
+  </section>
+
+  <section class="grid" id="grid"></section>
+
+  <section class="epg">
+    <h2>节目单（EPG）</h2>
+    <p class="muted">在播放器中填写节目单地址，可显示频道节目表。</p>
+    <div class="epg-list">
+      <div class="epg-item">
+        <div><b>节目单一</b><code id="epg1">https://epg.zsdc.eu.org/t.xml</code></div>
+        <button class="btn" data-copy="https://epg.zsdc.eu.org/t.xml">复制</button>
+      </div>
+      <div class="epg-item">
+        <div><b>节目单二</b><code id="epg2">http://epg.51zmt.top:8000/e.xml.gz</code></div>
+        <button class="btn" data-copy="http://epg.51zmt.top:8000/e.xml.gz">复制</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="usage">
+    <h2>使用说明</h2>
+    <div class="steps">
+      <div class="step"><span>1</span><div><b>选择列表</b><p>按地区或类型找到需要的订阅，点击「复制地址」拿到完整 M3U 链接。</p></div></div>
+      <div class="step"><span>2</span><div><b>填入播放器</b><p>在支持 M3U 的播放器（SwiftTV、APTV、TiviMate、PotPlayer 等）订阅设置里粘贴地址。</p></div></div>
+      <div class="step"><span>3</span><div><b>刷新频道</b><p>保存后播放器会拉取频道表，线路失效时换同频道的其他线路或换一个订阅。</p></div></div>
+      <div class="step"><span>4</span><div><b>站内试播</b><p>点开任意列表卡片可在线预览频道，确认线路能通再导入播放器，省事。</p></div></div>
+    </div>
+    <p class="tip">💡 提示：标有 IPv6 的列表需要网络支持 IPv6；标有「移动单播」的列表通常只在对应运营商宽带下可用。</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>本站为个人收集整理，<strong>仅供测试</strong>。</p>
+    <p class="muted">直播源均来自于网络，本人只进行收集和整理，不对内容的隐私和版权负责。</p>
+    <p class="muted small">数据生成时间：<span id="gen">—</span> · 页面托管于 GitHub Pages</p>
+  </div>
+</footer>
+
+<!-- 详情弹窗 -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-mask" data-close></div>
+  <div class="modal-body">
+    <div class="modal-head">
+      <div>
+        <h3 id="mTitle">—</h3>
+        <p class="muted" id="mMeta">—</p>
+      </div>
+      <button class="close" data-close title="关闭">×</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn primary" id="mCopy">复制订阅地址</button>
+      <input class="url" id="mUrl" readonly>
+    </div>
+    <div class="player-wrap" id="playerWrap" hidden>
+      <video id="video" controls playsinline></video>
+      <div class="player-note" id="playerNote"></div>
+    </div>
+    <div class="modal-filter">
+      <input id="mq" type="search" placeholder="在列表内搜索频道…" autocomplete="off">
+      <span class="muted small" id="mCount"></span>
+    </div>
+    <div class="chan-list" id="mChans"></div>
+    <div class="muted small pad">仅展示部分频道用于验证线路，完整列表请导入播放器。</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
